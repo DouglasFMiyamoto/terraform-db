@@ -40,8 +40,11 @@ jobs:
         working-directory: ./db-infra
         run: |
           echo "Running terraform plan with detailed logs..."
-          export TF_LOG=DEBUG  # Ativando logs detalhados do Terraform
-          terraform plan -out=tfplan
+          export TF_LOG=DEBUG 
+          terraform plan -out=tfplan \
+            -var="eks_private_cidrs=${{ secrets.EKS_PRIVATE_CIDRS }}" \
+            -var="db_username=${{ secrets.DB_USERNAME }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD }}"
 
       - name: Terraform Apply with Debug Logs
         working-directory: ./db-infra
@@ -49,3 +52,18 @@ jobs:
           echo "Running terraform apply with detailed logs..."
           export TF_LOG=DEBUG
           terraform apply -auto-approve tfplan
+
+      - name: Get Terraform Outputs
+        working-directory: ./db-infra
+        run: |
+          echo "Fetching outputs..."
+          export RDS_ENDPOINT=$(terraform output -raw rds_endpoint)
+          export RDS_SG_ID=$(terraform output -raw rds_security_group_id)
+          export VPC_ID=$(terraform output -raw vpc_id)
+
+          echo "RDS Endpoint: $RDS_ENDPOINT"
+          echo "RDS Security Group ID: $RDS_SG_ID"
+          echo "VPC ID: $VPC_ID"
+          echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
+          echo "RDS_SG_ID=$RDS_SG_ID" >> $GITHUB_ENV
+          echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
