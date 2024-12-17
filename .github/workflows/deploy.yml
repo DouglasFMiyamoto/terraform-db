@@ -36,6 +36,19 @@ jobs:
         working-directory: ./db-infra
         run: terraform validate
 
+      - name: Delete VPC if exists
+        working-directory: ./db-infra
+        run: |
+          echo "Checking if VPC exists..."
+          EXISTING_VPC=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='main-vpc']]" --output text)
+          if [ "$EXISTING_VPC" != "None" ]; then
+            VPC_ID=$(echo $EXISTING_VPC | awk '{print $7}')
+            echo "VPC $VPC_ID exists, deleting it..."
+            aws ec2 delete-vpc --vpc-id $VPC_ID || echo "Error deleting VPC, it might not exist or cannot be deleted"
+          else
+            echo "VPC does not exist, skipping deletion."
+          fi
+
       - name: Delete DB Subnet Group if exists
         working-directory: ./db-infra
         run: |
