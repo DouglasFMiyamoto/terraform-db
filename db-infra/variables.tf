@@ -3,5 +3,5 @@ variable "db_username" {
   default = "lanchoneteApp"
 }
 variable "db_password" {
-  default = "Unica@123"
+  default = "Unica123"
 }
