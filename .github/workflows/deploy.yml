@@ -31,13 +31,19 @@ jobs:
       run: terraform init
 
     - name: Terraform Validate
-      run: terraform validate
+      run: |
+          cd db-infra
+          terraform init
 
     - name: Terraform Plan
-      run: terraform plan
+      run: |
+          cd db-infra
+          terraform plan
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: |
+          cd db-infra
+          terraform apply -auto-approve
 
     - name: Test Database Connection
       run: |
