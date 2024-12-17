@@ -1,4 +1,3 @@
-variable "vpc_id" {}
 variable "eks_private_cidrs" {}
 variable "db_username" {
   default = "lanchoneteApp"
