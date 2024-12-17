@@ -59,8 +59,7 @@ jobs:
           echo "Fetching outputs..."
           export RDS_ENDPOINT=$(terraform output -raw rds_endpoint)
           export RDS_SG_ID=$(terraform output -raw rds_security_group_id)
-          export VPC_ID=$(terraform output -raw vpc_id)
-
+          export VPC_ID=$(terraform output -raw vpc_id)  # Captura o vpc_id
           echo "RDS Endpoint: $RDS_ENDPOINT"
           echo "RDS Security Group ID: $RDS_SG_ID"
           echo "VPC ID: $VPC_ID"
