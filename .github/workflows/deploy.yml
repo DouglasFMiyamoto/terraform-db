@@ -36,10 +36,16 @@ jobs:
         working-directory: ./db-infra
         run: terraform validate
 
-      - name: Terraform Plan
+      - name: Terraform Plan with Debug Logs
         working-directory: ./db-infra
-        run: terraform plan -out=tfplan
+        run: |
+          echo "Running terraform plan with detailed logs..."
+          export TF_LOG=DEBUG  # Ativando logs detalhados do Terraform
+          terraform plan -out=tfplan
 
-      - name: Terraform Apply
+      - name: Terraform Apply with Debug Logs
         working-directory: ./db-infra
-        run: terraform apply -auto-approve tfplan
+        run: |
+          echo "Running terraform apply with detailed logs..."
+          export TF_LOG=DEBUG
+          terraform apply -auto-approve tfplan
