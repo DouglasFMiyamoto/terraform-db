@@ -1,4 +1,4 @@
-name: Deploy Database Infrastructure
+name: Deploy Database Infra
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
       - main  
 
 jobs:
-  deploy:
+  terraform-deploy:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
 
@@ -23,22 +23,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Install Terraform
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: "1.6.0"
+          terraform_version: 1.6.0
 
       - name: Terraform Init
-        run: |
-          cd db-infra
-          terraform init
+        working-directory: ./db-infra
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: ./db-infra
+        run: terraform validate
 
       - name: Terraform Plan
-        run: |
-          cd db-infra
-          terraform plan
+        working-directory: ./db-infra
+        run: terraform plan -out=tfplan
 
+      # Aplicar o plano do Terraform
       - name: Terraform Apply
-        run: |
-          cd db-infra
-          terraform apply -auto-approve
+        working-directory: ./db-infra
+        run: terraform apply -auto-approve tfplan
