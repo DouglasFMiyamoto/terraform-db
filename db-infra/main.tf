@@ -82,7 +82,3 @@ resource "aws_db_instance" "postgres" {
 output "db_endpoint" {
   value = aws_db_instance.postgres.endpoint
 }
-
-output "vpc_id" {
-  value = aws_vpc.main_vpc.id
-}
