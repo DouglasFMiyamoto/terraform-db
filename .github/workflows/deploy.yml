@@ -93,12 +93,11 @@ jobs:
         working-directory: ./db-infra
         run: |
           echo "Fetching outputs..."
-          export RDS_ENDPOINT=$(terraform output -raw rds_endpoint)
-          export RDS_SG_ID=$(terraform output -raw rds_security_group_id)
-          export VPC_ID=$(terraform output -raw vpc_id)  
+          
+          RDS_ENDPOINT=$(terraform output -raw rds_endpoint)
+          RDS_SG_ID=$(terraform output -raw rds_security_group_id)
+          VPC_ID=$(terraform output -raw vpc_id)
+        
           echo "RDS Endpoint: $RDS_ENDPOINT"
           echo "RDS Security Group ID: $RDS_SG_ID"
           echo "VPC ID: $VPC_ID"
-          echo "RDS_ENDPOINT=$RDS_ENDPOINT" >> $GITHUB_ENV
-          echo "RDS_SG_ID=$RDS_SG_ID" >> $GITHUB_ENV
-          echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
