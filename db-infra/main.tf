@@ -1,5 +1,8 @@
-data "aws_subnet_ids" "private_subnets" {
-  vpc_id = var.vpc_id
+data "aws_subnets" "private_subnets" {
+  filter {
+    name   = "tag:Environment"
+    values = ["private"]
+  }
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
