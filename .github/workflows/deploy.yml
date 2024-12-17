@@ -44,7 +44,18 @@ jobs:
           if [ "$EXISTING_VPC" != "None" ]; then
             VPC_ID=$(echo $EXISTING_VPC | awk '{print $7}')
             echo "VPC $VPC_ID exists, deleting it..."
-            aws ec2 delete-vpc --vpc-id $VPC_ID || echo "Error deleting VPC, it might not exist or cannot be deleted"
+
+            # Antes de deletar a VPC, remover dependências (subnets, interfaces, etc.)
+            SUBNETS=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" --query "Subnets[].SubnetId" --output text)
+            if [ "$SUBNETS" != "None" ]; then
+              for SUBNET in $SUBNETS; do
+                echo "Deleting subnet $SUBNET..."
+                aws ec2 delete-subnet --subnet-id $SUBNET || echo "Error deleting subnet $SUBNET"
+              done
+            fi
+
+            # Excluir a VPC
+            aws ec2 delete-vpc --vpc-id $VPC_ID || echo "Error deleting VPC $VPC_ID, it might not exist or cannot be deleted"
           else
             echo "VPC does not exist, skipping deletion."
           fi
