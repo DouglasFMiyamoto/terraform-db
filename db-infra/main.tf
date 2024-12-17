@@ -1,6 +1,6 @@
 data "aws_subnets" "private_subnets" {
   filter {
-    name   = "tag:Environment" 
+    name   = "tag:Environment"
     values = ["private"]      
   }
 }
@@ -45,7 +45,7 @@ resource "aws_db_instance" "postgres" {
   engine                 = "postgres"
   engine_version         = "16"
   instance_class         = "db.t4g.micro"
-  name                   = "dbLanchonete"
+  db_name                = "dbLanchonete" 
   username               = var.db_username
   password               = var.db_password
   publicly_accessible    = false
