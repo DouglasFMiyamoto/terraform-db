@@ -7,29 +7,33 @@ resource "aws_vpc" "main_vpc" {
   }
 }
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "public_subnet_a" {
   vpc_id     = aws_vpc.main_vpc.id
   cidr_block = "10.0.1.0/24"
   availability_zone = "us-east-1a"
   map_public_ip_on_launch = true
   tags = {
-    Name = "Public Subnet"
+    Name = "Public Subnet A"
   }
 }
 
-resource "aws_subnet" "private_subnet" {
+resource "aws_subnet" "public_subnet_b" {
   vpc_id     = aws_vpc.main_vpc.id
   cidr_block = "10.0.2.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = "us-east-1b"
+  map_public_ip_on_launch = true
   tags = {
-    Name = "Private Subnet"
+    Name = "Public Subnet B"
   }
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name        = "rds-subnet-group"
   description = "Subnet group for RDS"
-  subnet_ids  = [aws_subnet.private_subnet.id]  # Usando a subnet privada
+  subnet_ids  = [
+    aws_subnet.public_subnet_a.id,
+    aws_subnet.public_subnet_b.id
+  ]
 
   tags = {
     Name = "rds-subnet-group"
