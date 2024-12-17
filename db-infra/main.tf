@@ -7,7 +7,6 @@ resource "aws_vpc" "main_vpc" {
   }
 }
 
-# Subnet pública
 resource "aws_subnet" "public_subnet" {
   vpc_id     = aws_vpc.main_vpc.id
   cidr_block = "10.0.1.0/24"
@@ -18,7 +17,6 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
-# Subnet privada
 resource "aws_subnet" "private_subnet" {
   vpc_id     = aws_vpc.main_vpc.id
   cidr_block = "10.0.2.0/24"
@@ -28,7 +26,6 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
-# Grupo de subnets do RDS
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name        = "rds-subnet-group"
   description = "Subnet group for RDS"
@@ -39,7 +36,6 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
   }
 }
 
-# Grupo de segurança para o RDS
 resource "aws_security_group" "rds_sg" {
   name        = "rds-security-group"
   description = "Allow RDS access"
@@ -64,7 +60,6 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
-# Instância do RDS
 resource "aws_db_instance" "postgres" {
   allocated_storage      = 20
   storage_type           = "gp3"
@@ -84,7 +79,10 @@ resource "aws_db_instance" "postgres" {
   }
 }
 
-# Output para exibir o endpoint do banco de dados
 output "db_endpoint" {
   value = aws_db_instance.postgres.endpoint
+}
+
+output "vpc_id" {
+  value = aws_vpc.main_vpc.id
 }
