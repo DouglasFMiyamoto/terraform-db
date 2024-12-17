@@ -43,8 +43,8 @@ jobs:
           export TF_LOG=DEBUG 
           terraform plan -out=tfplan \
             -var="eks_private_cidrs=${{ secrets.EKS_PRIVATE_CIDRS }}" \
-            -var="db_username=${{ secrets.DB_USERNAME }}" \
-            -var="db_password=${{ secrets.DB_PASSWORD }}"
+            -var="db_username=${{ secrets.POSTGRES_USER }}" \
+            -var="db_password=${{ secrets.POSTGRES_PASSWORD}}"
 
       - name: Terraform Apply with Debug Logs
         working-directory: ./db-infra
