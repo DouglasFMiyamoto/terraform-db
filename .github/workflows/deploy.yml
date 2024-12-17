@@ -40,7 +40,6 @@ jobs:
         working-directory: ./db-infra
         run: terraform plan -out=tfplan
 
-      # Aplicar o plano do Terraform
       - name: Terraform Apply
         working-directory: ./db-infra
         run: terraform apply -auto-approve tfplan
